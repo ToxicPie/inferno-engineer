@@ -66,7 +66,7 @@ fn game_ui(
                         ui,
                         hint_popup_id,
                         &command_input,
-                        egui::AboveOrBelow::Above,
+                        egui::AboveOrBelow::Below,
                         |ui| {
                             let user_input = ui_state.input.clone();
                             let command = user_input
@@ -163,7 +163,7 @@ impl Default for UiState {
         UiState {
             input: String::new(),
             log: vec![
-                "The Inferno Terminal v666".to_string(),
+                "The Inferno Interactive Console v666".to_string(),
                 "Type `commands` for a list of commands or try `help <command>`.".to_string(),
             ],
         }
