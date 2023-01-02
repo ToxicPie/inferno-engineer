@@ -4,7 +4,7 @@ mod man;
 
 use crate::gameplay;
 
-pub trait Command {
+pub trait GameCommand {
     fn synopsis(&self) -> &'static str;
     fn man_page(&self) -> &'static str;
     fn required_level(&self) -> i32;
@@ -17,7 +17,7 @@ pub trait Command {
 
 pub struct InvalidCommand {}
 
-impl Command for InvalidCommand {
+impl GameCommand for InvalidCommand {
     fn synopsis(&self) -> &'static str {
         unimplemented!()
     }
@@ -38,7 +38,7 @@ impl Command for InvalidCommand {
 
 const COMMAND_LIST: [&'static str; 3] = ["commands", "help", "man"];
 
-pub fn get_command_by_name(name: &str) -> Option<Box<dyn Command>> {
+pub fn get_command_by_name(name: &str) -> Option<Box<dyn GameCommand>> {
     let name = name.trim();
     match name.to_lowercase().as_str() {
         "commands" => Some(Box::new(commands::CommandsCommand {})),

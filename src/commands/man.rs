@@ -3,7 +3,7 @@ use crate::gameplay;
 
 pub struct ManCommand {}
 
-impl commands::Command for ManCommand {
+impl commands::GameCommand for ManCommand {
     fn synopsis(&self) -> &'static str {
         "man <command_name>"
     }
