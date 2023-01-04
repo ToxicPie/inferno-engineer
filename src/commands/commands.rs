@@ -1,7 +1,6 @@
-use crate::commands;
-use crate::gameplay;
+use crate::{commands, game_backend};
 
-pub struct CommandsCommand {}
+pub struct CommandsCommand;
 
 impl commands::GameCommand for CommandsCommand {
     fn synopsis(&self) -> &'static str {
@@ -25,7 +24,7 @@ DESCRIPTION
     }
     fn execute(
         &self,
-        game_state: &mut gameplay::GameState,
+        game_state: &mut game_backend::GameState,
         argv: &[&str],
     ) -> Result<String, String> {
         let commands = commands::list_commands("", game_state.player_level);

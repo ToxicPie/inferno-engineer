@@ -1,7 +1,6 @@
-use crate::commands;
-use crate::gameplay;
+use crate::{commands, game_backend};
 
-pub struct HelpCommand {}
+pub struct HelpCommand;
 
 impl commands::GameCommand for HelpCommand {
     fn synopsis(&self) -> &'static str {
@@ -18,8 +17,8 @@ DESCRIPTION
     For a more detailed description, use the "man" command.
 
 EXAMPLES
-    help attack
-        Show help about the command "attack".
+    help man
+        Show help about the command "man".
 "#
     }
     fn required_level(&self) -> i32 {
@@ -27,7 +26,7 @@ EXAMPLES
     }
     fn execute(
         &self,
-        game_state: &mut gameplay::GameState,
+        game_state: &mut game_backend::GameState,
         argv: &[&str],
     ) -> Result<String, String> {
         if let Some(command_name) = argv.get(1) {

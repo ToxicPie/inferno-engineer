@@ -8,6 +8,7 @@ impl Plugin for CanvasPlugin {
     }
 }
 
+// resizes window to fill the entire canvas (when in web)
 fn resize_canvas(mut windows: ResMut<Windows>) {
     let Some(bevy_window) = windows.get_primary_mut() else { return; };
     let Some(web_window) = web_sys::window() else { return; };

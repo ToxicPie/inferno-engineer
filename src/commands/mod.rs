@@ -1,8 +1,9 @@
 mod commands;
+mod fireball;
 mod help;
 mod man;
 
-use crate::gameplay;
+use crate::game_backend;
 
 pub trait GameCommand {
     fn synopsis(&self) -> &'static str;
@@ -10,12 +11,12 @@ pub trait GameCommand {
     fn required_level(&self) -> i32;
     fn execute(
         &self,
-        game_state: &mut gameplay::GameState,
+        game_state: &mut game_backend::GameState,
         argv: &[&str],
     ) -> Result<String, String>;
 }
 
-pub struct InvalidCommand {}
+pub struct InvalidCommand;
 
 impl GameCommand for InvalidCommand {
     fn synopsis(&self) -> &'static str {
@@ -29,27 +30,28 @@ impl GameCommand for InvalidCommand {
     }
     fn execute(
         &self,
-        _game_state: &mut gameplay::GameState,
+        _game_state: &mut game_backend::GameState,
         argv: &[&str],
     ) -> Result<String, String> {
         Err(format!("Invalid command: {}", argv[0]))
     }
 }
 
-const COMMAND_LIST: [&'static str; 3] = ["commands", "help", "man"];
+const COMMAND_LIST: [&'static str; 4] = ["commands", "help", "man", "fireball"];
 
 pub fn get_command_by_name(name: &str) -> Option<Box<dyn GameCommand>> {
     let name = name.trim();
     match name.to_lowercase().as_str() {
-        "commands" => Some(Box::new(commands::CommandsCommand {})),
-        "help" => Some(Box::new(help::HelpCommand {})),
-        "man" | "manual" => Some(Box::new(man::ManCommand {})),
+        "commands" => Some(Box::new(commands::CommandsCommand)),
+        "help" => Some(Box::new(help::HelpCommand)),
+        "man" | "manual" => Some(Box::new(man::ManCommand)),
+        "fireball" => Some(Box::new(fireball::FireballCommand)),
         _ => None,
     }
 }
 
 pub fn execute_command(
-    game_state: &mut gameplay::GameState,
+    game_state: &mut game_backend::GameState,
     command: &str,
 ) -> Result<String, String> {
     let argv = command
@@ -57,7 +59,7 @@ pub fn execute_command(
         .filter(|&s| !s.is_empty())
         .collect::<Vec<_>>();
     let command_name = argv.first().unwrap_or(&"");
-    let command_box = get_command_by_name(command_name).unwrap_or(Box::new(InvalidCommand {}));
+    let command_box = get_command_by_name(command_name).unwrap_or(Box::new(InvalidCommand));
     if game_state.player_level < command_box.required_level() {
         Err(
             "You do not have access to run that command.\nThis incident will be reported."
